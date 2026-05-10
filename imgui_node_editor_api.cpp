@@ -236,6 +236,18 @@ bool ax::NodeEditor::Link(LinkId id, PinId startPinId, PinId endPinId, const ImV
     return s_Editor->DoLink(id, startPinId, endPinId, ImColor(color), thickness);
 }
 
+bool ax::NodeEditor::RoutedLink(LinkId id, PinId startPinId, PinId endPinId, const ImVec2* routePoints, int routePointCount, const ImVec4& color/* = ImVec4(1, 1, 1, 1)*/, float thickness/* = 1.0f*/)
+{
+    return s_Editor->DoRoutedLink(id, startPinId, endPinId, routePoints, routePointCount, ImColor(color), thickness);
+}
+
+int ax::NodeEditor::GetLinkClosestSegment(LinkId linkId, const ImVec2& canvasPosition)
+{
+    if (auto link = s_Editor->FindLink(linkId))
+        return link->FindClosestSegment(canvasPosition);
+    return 0;
+}
+
 void ax::NodeEditor::Flow(LinkId linkId, FlowDirection direction)
 {
     if (auto link = s_Editor->FindLink(linkId))
@@ -400,6 +412,11 @@ void ax::NodeEditor::SetGroupSize(NodeId nodeId, const ImVec2& size)
 ImVec2 ax::NodeEditor::GetNodePosition(NodeId nodeId)
 {
     return s_Editor->GetNodePosition(nodeId);
+}
+
+ImVec2 ax::NodeEditor::GetGroupSize(NodeId nodeId)
+{
+    return s_Editor->GetGroupSize(nodeId);
 }
 
 ImVec2 ax::NodeEditor::GetNodeSize(NodeId nodeId)

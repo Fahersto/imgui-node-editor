@@ -461,6 +461,7 @@ struct Link final: Object
     float  m_Thickness;
     ImVec2 m_Start;
     ImVec2 m_End;
+    vector<ImVec2> m_RoutePoints;
 
     Link(EditorContext* editor, LinkId id)
         : Object(editor)
@@ -482,6 +483,9 @@ struct Link final: Object
     void UpdateEndpoints();
 
     ImCubicBezierPoints GetCurve() const;
+    ImCubicBezierPoints GetSegmentCurve(int segmentIndex) const;
+    int GetSegmentCount() const;
+    int FindClosestSegment(const ImVec2& point) const;
 
     virtual bool TestHit(const ImVec2& point, float extraThickness = 0.0f) const override final;
     virtual bool TestHit(const ImRect& rect, bool allowIntersect = true) const override final;
@@ -1302,6 +1306,7 @@ struct EditorContext
     void End();
 
     bool DoLink(LinkId id, PinId startPinId, PinId endPinId, ImU32 color, float thickness);
+    bool DoRoutedLink(LinkId id, PinId startPinId, PinId endPinId, const ImVec2* routePoints, int routePointCount, ImU32 color, float thickness);
 
 
     NodeBuilder& GetNodeBuilder() { return m_NodeBuilder; }
@@ -1321,6 +1326,7 @@ struct EditorContext
     void SetNodePosition(NodeId nodeId, const ImVec2& screenPosition);
     void SetGroupSize(NodeId nodeId, const ImVec2& size);
     ImVec2 GetNodePosition(NodeId nodeId);
+    ImVec2 GetGroupSize(NodeId nodeId);
     ImVec2 GetNodeSize(NodeId nodeId);
 
     void SetNodeZPosition(NodeId nodeId, float z);
